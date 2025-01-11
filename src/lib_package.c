@@ -375,6 +375,17 @@ static int lj_cf_package_loader_lua(lua_State *L)
   if (filename == NULL) return 1;  /* library not found in this path */
   if (luaL_loadfile(L, filename) != 0)
     loaderror(L, filename);
+  else
+  {
+    lua_getfield (L, LUA_REGISTRYINDEX, "required");
+    if (lua_istable (L, -1))
+    {
+      lua_pushboolean (L, 1);
+      lua_setfield (L, -2, filename);
+    }
+    lua_pop (L, 1);
+  }
+
   return 1;  /* library loaded successfully */
 }
 
